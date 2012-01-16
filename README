@@ -1,6 +1,6 @@
 I "ported" this from Joel Hooks' Signal command map from: https://github.com/joelhooks/signals-extensions-CommandSignal to work with the current Robotlegs2.
 
-I would love to get some help on making this right. I have taken a quick stab at it but I think I might be missing a few things. 
-It works for what I need in my current RL application to upgrade it to RL2. Any input is highly appreciated!
+I would love to get some help on the guards and hooks aspect. I have taken a quick stab at it but I think I might be missing the way to unmap properly for "one times". 
+It works jsut fine for what I need in my current RL application to upgrade it to RL2. Any input is highly appreciated!
 
 There is a simple example at: https://github.com/pixels4nickels/SignalCommandMap-example
