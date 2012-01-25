@@ -11,12 +11,14 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	import org.robotlegs.core.IInjector;
 	import org.swiftsuspenders.Injector;
-	
+
 	import robotlegs.bender.extensions.commandMap.api.ICommandMapping;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
 
+	import robotlegs.bender.framework.guard.impl.guardsApprove;
+	import robotlegs.bender.framework.hook.impl.applyHooks;
+	
 	public class SignalCommandTrigger implements ICommandTrigger
 	{
 
@@ -104,16 +106,17 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		
 		private function routeSignalToCommand(signal:ISignal, valueObjects:Array, commandClass:Class, oneshot:Boolean):void
 		{
-			var command:Object = createCommandInstance(signal.valueClasses, valueObjects, commandClass);
+			
 			// run past the guards and hooks, and execute
 			const mappings:Vector.<ICommandMapping> = mappings.concat();
 			for each (var mapping:ICommandMapping in mappings)
 			{
-				if (mapping.guards.approve())
+				if (guardsApprove(mapping.guards, _injector))
 				{
 					once && removeMapping(mapping);
 					_injector.map(mapping.commandClass).asSingleton();
-					mapping.hooks.hook();
+					const command:Object = createCommandInstance(signal.valueClasses, valueObjects, commandClass);
+					applyHooks(mapping.hooks, _injector);
 					_injector.unmap(mapping.commandClass);
 					command.execute();
 				}

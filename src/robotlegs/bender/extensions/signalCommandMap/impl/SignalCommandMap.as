@@ -13,10 +13,10 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.swiftsuspenders.Injector;
 	
 	import robotlegs.bender.extensions.commandMap.api.ICommandMap;
-	import robotlegs.bender.extensions.commandMap.api.ICommandMapper;
-	import robotlegs.bender.extensions.commandMap.api.ICommandMappingFinder;
+	import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
+	import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
+	import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
-	import robotlegs.bender.extensions.commandMap.api.ICommandUnmapper;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
 	public class SignalCommandMap implements ISignalCommandMap

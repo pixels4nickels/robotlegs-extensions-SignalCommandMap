@@ -7,21 +7,33 @@
 
 package robotlegs.bender.extensions.signalCommandMap
 {
-	import robotlegs.bender.core.api.IContext;
-	import robotlegs.bender.core.api.IContextExtension;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.extensions.signalCommandMap.impl.SignalCommandMap;
+	import robotlegs.bender.framework.context.api.IContext;
+	import robotlegs.bender.framework.context.api.IContextConfig;
 
-	public class SignalCommandMapExtension implements IContextExtension
+	public class SignalCommandMapExtension implements IContextConfig
 	{
 		private var context:IContext;
 
-		public function install(context:IContext):void
+		public function configureContext(context:IContext):void
 		{
 			this.context = context;
 			context.injector.map(ISignalCommandMap).toSingleton(SignalCommandMap);
 		}
-
+		
+		private function handleContextPreInitialize(step:String, callback:Function):void
+		{
+			//trace("Doing some things before the context self initializes...");
+			//setTimeout(callback, 1000);
+		}
+		
+		private function handleContextPostInitialize():void
+		{
+			trace("Doing some things now that the context is initialized...");
+			context.injector.getInstance(ISignalCommandMap);
+		}
+/*
 		public function initialize():void
 		{
 			context.injector.getInstance(ISignalCommandMap);
@@ -30,6 +42,6 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function uninstall():void
 		{
 			context.injector.unmap(ISignalCommandMap);
-		}
+		}*/
 	}
 }
