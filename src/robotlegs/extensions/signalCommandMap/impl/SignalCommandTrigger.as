@@ -5,7 +5,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.signalCommandMap.impl
+package robotlegs.extensions.signalCommandMap.impl
 {
 	import flash.utils.describeType;
 	

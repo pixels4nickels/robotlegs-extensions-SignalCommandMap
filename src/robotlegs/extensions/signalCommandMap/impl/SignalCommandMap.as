@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
-//  Copyright (c) 2011 the original author or authors. All Rights Reserved.
+//  Copyright (c) 2012 the original author or authors. All Rights Reserved.
 //
 //  NOTICE: You are permitted to use, modify, and distribute this file
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.signalCommandMap.impl
+package robotlegs.extensions.signalCommandMap.impl
 {
 	import flash.utils.Dictionary;
 	
@@ -17,7 +17,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
-	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
+	
+	import robotlegs.extensions.signalCommandMap.api.ISignalCommandMap;
 
 	public class SignalCommandMap implements ISignalCommandMap
 	{

@@ -5,10 +5,10 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.bender.extensions.signalCommandMap
+package robotlegs.extensions.signalCommandMap
 {
-	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
-	import robotlegs.bender.extensions.signalCommandMap.impl.SignalCommandMap;
+	import robotlegs.extensions.signalCommandMap.api.ISignalCommandMap;
+	import robotlegs.extensions.signalCommandMap.impl.SignalCommandMap;
 	import robotlegs.bender.framework.context.api.IContext;
 	import robotlegs.bender.framework.context.api.IContextConfig;
 
