@@ -5,7 +5,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.extensions.signalCommandMap.impl
+package robotlegs.bender.extensions.signalCommandMap.impl
 {
 	import flash.utils.Dictionary;
 	
@@ -18,7 +18,7 @@ package robotlegs.extensions.signalCommandMap.impl
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
 	
-	import robotlegs.extensions.signalCommandMap.api.ISignalCommandMap;
+	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
 	public class SignalCommandMap implements ISignalCommandMap
 	{
@@ -27,11 +27,11 @@ package robotlegs.extensions.signalCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private const signalTriggers:Dictionary = new Dictionary();
+		private const _signalTriggers:Dictionary = new Dictionary();
 
-		private var injector:Injector;
+		private var _injector:Injector;
 		
-		private var commandMap:ICommandMap;
+		private var _commandMap:ICommandMap;
 
 		/*============================================================================*/
 		/* Constructor                                                                */
@@ -39,8 +39,8 @@ package robotlegs.extensions.signalCommandMap.impl
 
 		public function SignalCommandMap(injector:Injector, commandMap:ICommandMap)
 		{
-			this.injector = injector;
-			this.commandMap = commandMap;
+			_injector = injector;
+			_commandMap = commandMap;
 		}
 
 		/*============================================================================*/
@@ -50,20 +50,19 @@ package robotlegs.extensions.signalCommandMap.impl
 		public function map(signalClass:Class, once:Boolean = false):ICommandMapper
 		{
 			const trigger:ICommandTrigger =
-				signalTriggers[signalClass] ||=
+				_signalTriggers[signalClass] ||=
 				createSignalTrigger(signalClass, once);
-			return commandMap.map(trigger);
+			return _commandMap.map(trigger);
 		}
 
 		public function unmap(signalClass:Class):ICommandUnmapper
 		{
-			return commandMap.unmap(getSignalTrigger(signalClass));
+			return _commandMap.unmap(getSignalTrigger(signalClass));
 		}
 
 		public function getMapping(signalClass:Class):ICommandMappingFinder
 		{
-			const trigger:ICommandTrigger = getSignalTrigger(signalClass);
-			return commandMap.getMapping(trigger);
+			return _commandMap.getMapping(getSignalTrigger(signalClass));
 		}
 
 		/*============================================================================*/
@@ -72,12 +71,12 @@ package robotlegs.extensions.signalCommandMap.impl
 
 		private function createSignalTrigger(signalClass:Class, once:Boolean = false):ICommandTrigger
 		{
-			return new SignalCommandTrigger(injector, signalClass, once);
+			return new SignalCommandTrigger(_injector, signalClass, once);
 		}
 
 		private function getSignalTrigger(signalClass:Class):ICommandTrigger
 		{
-			return signalTriggers[signalClass];
+			return _signalTriggers[signalClass];
 		}
 	}
 }

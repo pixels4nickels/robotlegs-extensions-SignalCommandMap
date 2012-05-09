@@ -5,19 +5,18 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.extensions.signalCommandMap.impl
+package robotlegs.bender.extensions.signalCommandMap.impl
 {
 	import flash.utils.describeType;
 	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
-
+	
 	import robotlegs.bender.extensions.commandMap.api.ICommandMapping;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
-
-	import robotlegs.bender.framework.guard.impl.guardsApprove;
-	import robotlegs.bender.framework.hook.impl.applyHooks;
+	import robotlegs.bender.framework.impl.applyHooks;
+	import robotlegs.bender.framework.impl.guardsApprove;
 	
 	public class SignalCommandTrigger implements ICommandTrigger
 	{
@@ -37,13 +36,13 @@ package robotlegs.extensions.signalCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private const mappings:Vector.<ICommandMapping> = new Vector.<ICommandMapping>;
+		private const _mappings:Vector.<ICommandMapping> = new Vector.<ICommandMapping>;
 
-		private var signal:ISignal;
+		private var _signal:ISignal;
 
-		private var signalClass:Class;
+		private var _signalClass:Class;
 
-		private var once:Boolean;
+		private var _once:Boolean;
 
 		/*============================================================================*/
 		/* Constructor                                                                */
@@ -54,9 +53,9 @@ package robotlegs.extensions.signalCommandMap.impl
 			signalClass:Class,
 			once:Boolean = false)
 		{
-			this._injector = injector;
-			this.signalClass = signalClass;
-			this.once = once;
+			_injector = injector;
+			_signalClass = signalClass;
+			_once = once;
 		}
 
 		/*============================================================================*/
@@ -66,18 +65,18 @@ package robotlegs.extensions.signalCommandMap.impl
 		public function addMapping(mapping:ICommandMapping):void
 		{
 			verifyCommandClass(mapping);
-			mappings.push(mapping);
-			if (mappings.length == 1)
+			_mappings.push(mapping);
+			if (_mappings.length == 1)
 				createSignalClassInstance(mapping.commandClass);
 		}
 
 		public function removeMapping(mapping:ICommandMapping):void
 		{
-			const index:int = mappings.indexOf(mapping);
+			const index:int = _mappings.indexOf(mapping);
 			if (index != -1)
 			{
-				mappings.splice(index, 1);
-				if (mappings.length == 0)
+				_mappings.splice(index, 1);
+				if (_mappings.length == 0)
 					unmapSignalArguments();
 			}
 		}
@@ -94,12 +93,12 @@ package robotlegs.extensions.signalCommandMap.impl
 
 		private function createSignalClassInstance(commandClass:Class):void
 		{		
-			signal = _injector.getInstance( signalClass );
-			_injector.map( signalClass).toValue( signal );
-			signal.add(
+			_signal = _injector.getInstance( _signalClass );
+			_injector.map( _signalClass).toValue( _signal );
+			_signal.add(
 				function(a:* = null, b:* = null, c:* = null, d:* = null, e:* = null, f:* = null, g:* = null):void
 				{
-					routeSignalToCommand( signal, arguments, commandClass, once );
+					routeSignalToCommand( _signal, arguments, commandClass, _once );
 				}
 			);
 		}
@@ -108,12 +107,12 @@ package robotlegs.extensions.signalCommandMap.impl
 		{
 			
 			// run past the guards and hooks, and execute
-			const mappings:Vector.<ICommandMapping> = mappings.concat();
+			const mappings:Vector.<ICommandMapping> = _mappings.concat();
 			for each (var mapping:ICommandMapping in mappings)
 			{
 				if (guardsApprove(mapping.guards, _injector))
 				{
-					once && removeMapping(mapping);
+					_once && removeMapping(mapping);
 					_injector.map(mapping.commandClass).asSingleton();
 					const command:Object = createCommandInstance(signal.valueClasses, valueObjects, commandClass);
 					applyHooks(mapping.hooks, _injector);
@@ -127,9 +126,9 @@ package robotlegs.extensions.signalCommandMap.impl
 		
 		private function unmapSignalArguments():void
 		{
-			for (var i:uint = 0; i < signal.valueClasses.length; i++)
+			for (var i:uint = 0; i < _signal.valueClasses.length; i++)
 			{
-				_injector.unmap(signal.valueClasses[i]);
+				_injector.unmap(_signal.valueClasses[i]);
 			}
 		}
 		
