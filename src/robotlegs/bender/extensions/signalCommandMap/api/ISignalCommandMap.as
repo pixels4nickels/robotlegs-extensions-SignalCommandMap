@@ -5,7 +5,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //------------------------------------------------------------------------------
 
-package robotlegs.extensions.signalCommandMap.api
+package robotlegs.bender.extensions.signalCommandMap.api
 {
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
