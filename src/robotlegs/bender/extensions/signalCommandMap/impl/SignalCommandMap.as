@@ -8,16 +8,16 @@
 package robotlegs.bender.extensions.signalCommandMap.impl
 {
 	import flash.utils.Dictionary;
-	
+
 	import org.osflash.signals.ISignal;
 	import org.swiftsuspenders.Injector;
-	
+
 	import robotlegs.bender.extensions.commandMap.api.ICommandMap;
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
 	import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
-	
+
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
 	public class SignalCommandMap implements ISignalCommandMap
@@ -30,14 +30,14 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		private const _signalTriggers:Dictionary = new Dictionary();
 
 		private var _injector:Injector;
-		
+
 		private var _commandMap:ICommandMap;
 
 		/*============================================================================*/
 		/* Constructor                                                                */
 		/*============================================================================*/
 
-		public function SignalCommandMap(injector:Injector, commandMap:ICommandMap)
+		public function SignalCommandMap( injector:Injector, commandMap:ICommandMap )
 		{
 			_injector = injector;
 			_commandMap = commandMap;
@@ -47,36 +47,34 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/* Public Functions                                                           */
 		/*============================================================================*/
 
-		public function map(signalClass:Class, once:Boolean = false):ICommandMapper
+		public function map( signalClass:Class, once:Boolean=false ):ICommandMapper
 		{
-			const trigger:ICommandTrigger =
-				_signalTriggers[signalClass] ||=
-				createSignalTrigger(signalClass, once);
-			return _commandMap.map(trigger);
+			const trigger:ICommandTrigger = createSignalTrigger( signalClass, once );
+			return _commandMap.map( trigger );
 		}
 
-		public function unmap(signalClass:Class):ICommandUnmapper
+		public function unmap( signalClass:Class ):ICommandUnmapper
 		{
-			return _commandMap.unmap(getSignalTrigger(signalClass));
+			return _commandMap.unmap( getSignalTrigger( signalClass ));
 		}
 
-		public function getMapping(signalClass:Class):ICommandMappingFinder
+		public function getMapping( signalClass:Class ):ICommandMappingFinder
 		{
-			return _commandMap.getMapping(getSignalTrigger(signalClass));
+			return _commandMap.getMapping( getSignalTrigger( signalClass ));
 		}
 
 		/*============================================================================*/
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function createSignalTrigger(signalClass:Class, once:Boolean = false):ICommandTrigger
+		private function createSignalTrigger( signalClass:Class, once:Boolean=false ):ICommandTrigger
 		{
-			return new SignalCommandTrigger(_injector, signalClass, once);
+			return new SignalCommandTrigger( _injector, signalClass, once );
 		}
 
-		private function getSignalTrigger(signalClass:Class):ICommandTrigger
+		private function getSignalTrigger( signalClass:Class ):ICommandTrigger
 		{
-			return _signalTriggers[signalClass];
+			return _signalTriggers[ signalClass ];
 		}
 	}
 }
