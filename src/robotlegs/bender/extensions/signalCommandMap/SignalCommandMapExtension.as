@@ -15,7 +15,7 @@ package robotlegs.bender.extensions.signalCommandMap
 	import robotlegs.bender.framework.api.IContextExtension;
 	import robotlegs.bender.framework.impl.UID;
 
-	public class SignalCommandMapExtension implements IContextExtension
+	public class SignalCommandMapExtension implements IExtension
 	{
 
 		/*============================================================================*/
