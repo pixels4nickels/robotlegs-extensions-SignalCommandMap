@@ -7,16 +7,16 @@
 
 package robotlegs.bender.extensions.signalCommandMap.api
 {
-	import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
-	import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
-	import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
+import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
+import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
+import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
 
-	public interface ISignalCommandMap
-	{
-		function map(signalClass:Class, once:Boolean = false):ICommandMapper;
+public interface ISignalCommandMap
+{
+    function map(signalClass:Class, once:Boolean = false):ICommandMapper;
 
-		function unmap(signalClass:Class):ICommandUnmapper;
+    function unmap(signalClass:Class):ICommandUnmapper;
 
-		function getMapping(signalClass:Class):ICommandMappingFinder;
-	}
+    function getMapping(signalClass:Class):ICommandMappingFinder;
+}
 }
