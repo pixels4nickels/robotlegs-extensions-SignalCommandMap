@@ -8,7 +8,8 @@
 package robotlegs.bender.extensions.signalCommandMap
 {
 	import robotlegs.bender.extensions.signalCommandMap.impl.SignalCommandMapTest;
-	import robotlegs.bender.extensions.signalCommandMap.impl.SignalCommandTriggerTest;
+
+	//import robotlegs.bender.extensions.signalCommandMap.impl.SignalCommandTriggerTest;
 
 	[RunWith( "org.flexunit.runners.Suite" )]
 	[Suite]
