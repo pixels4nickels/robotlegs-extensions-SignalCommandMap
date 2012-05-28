@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<s:Application xmlns:s = "library://ns.adobe.com/flex/spark"
+			   xmlns:fx = "http://ns.adobe.com/mxml/2009"
+			   width = "200"
+			   height = "200"
+			   creationComplete = "onCreationComplete()"
+			   backgroundColor = "#000000">
+
+	<fx:Script>
+		<![CDATA[
+			import org.flexunit.internals.TraceListener;
+			import org.flexunit.listeners.CIListener;
+			import org.flexunit.runner.FlexUnitCore;
+			import robotlegs.bender.extensions.ExtensionsTestSuite;
+
+			/*embedded just for fun*/
+			[Bindable]
+			[Embed( source="../build/assets/rl_justlegs.png" )]
+			private var Logo:Class;
+
+			private var core:FlexUnitCore;
+
+			private function onCreationComplete():void
+			{
+				core = new FlexUnitCore();
+				core.addListener( new CIListener());
+				core.addListener( new TraceListener());
+				core.run( ExtensionsTestSuite );
+			}
+		]]>
+	</fx:Script>
+
+	<s:BitmapImage source = "{Logo}"
+				   horizontalCenter = "0"
+				   verticalCenter = "0" />
+
+</s:Application>
