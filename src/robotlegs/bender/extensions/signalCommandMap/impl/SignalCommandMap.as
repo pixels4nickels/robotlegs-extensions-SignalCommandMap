@@ -12,11 +12,11 @@ import flash.utils.Dictionary;
 import org.osflash.signals.ISignal;
 import org.swiftsuspenders.Injector;
 
-import robotlegs.bender.extensions.commandMap.api.ICommandMap;
-import robotlegs.bender.extensions.commandMap.dsl.ICommandMapper;
-import robotlegs.bender.extensions.commandMap.dsl.ICommandMappingFinder;
-import robotlegs.bender.extensions.commandMap.dsl.ICommandUnmapper;
-import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
+import robotlegs.bender.extensions.commandCenter.api.ICommandCenter;
+import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
+import robotlegs.bender.extensions.commandCenter.dsl.ICommandMappingFinder;
+import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
+import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
 
 import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 
@@ -31,13 +31,13 @@ public class SignalCommandMap implements ISignalCommandMap
 
     private var _injector:Injector;
 
-    private var _commandMap:ICommandMap;
+    private var _commandMap:ICommandCenter;
 
     /*============================================================================*/
     /* Constructor                                                                */
     /*============================================================================*/
 
-    public function SignalCommandMap(injector:Injector, commandMap:ICommandMap)
+    public function SignalCommandMap(injector:Injector, commandMap:ICommandCenter)
     {
         _injector = injector;
         _commandMap = commandMap;
