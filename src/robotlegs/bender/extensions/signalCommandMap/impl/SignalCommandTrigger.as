@@ -14,8 +14,8 @@ import org.osflash.signals.ISignal;
 import org.osflash.signals.Signal;
 import org.swiftsuspenders.Injector;
 
-import robotlegs.bender.extensions.commandMap.api.ICommandMapping;
-import robotlegs.bender.extensions.commandMap.api.ICommandTrigger;
+import robotlegs.bender.extensions.commandCenter.api.ICommandMapping;
+import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
 import robotlegs.bender.framework.impl.applyHooks;
 import robotlegs.bender.framework.impl.guardsApprove;
 
