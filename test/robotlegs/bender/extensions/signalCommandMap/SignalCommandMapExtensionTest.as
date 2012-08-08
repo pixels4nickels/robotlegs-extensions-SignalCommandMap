@@ -10,7 +10,7 @@ package robotlegs.bender.extensions.signalCommandMap
 	import org.flexunit.assertThat;
 	import org.hamcrest.object.instanceOf;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
-	import robotlegs.bender.extensions.commandMap.CommandMapExtension;
+	import robotlegs.bender.extensions.commandCenter.CommandCenterExtension;
 	import robotlegs.bender.framework.impl.Context;
 
 	public class SignalCommandMapExtensionTest
@@ -30,7 +30,7 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function before():void
 		{
 			context = new Context();
-			context.extend( CommandMapExtension );
+			context.extend( CommandCenterExtension );
 		}
 
 		/*============================================================================*/
