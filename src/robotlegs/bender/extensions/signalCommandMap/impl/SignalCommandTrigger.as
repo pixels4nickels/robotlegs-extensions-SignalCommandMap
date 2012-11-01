@@ -154,8 +154,8 @@ public class SignalCommandTrigger implements ICommandTrigger
         if ( hasSignalCommand( _signal, commandClass ) )
             return;
 
+        _injector.map( _signalClass).asSingleton();
         _signal = _injector.getInstance( _signalClass );
-        _injector.map( _signalClass).toValue( _signal );
 
         const signalCommandMap:Dictionary = _signalMap[_signal] ||= new Dictionary( false );
         const callback:Function = function():void
