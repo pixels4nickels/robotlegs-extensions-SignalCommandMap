@@ -30,7 +30,7 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function before():void
 		{
 			context = new Context();
-			context.extend( CommandCenterExtension );
+			context.install( CommandCenterExtension );
 		}
 
 		/*============================================================================*/
@@ -41,7 +41,7 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function signalCommandMap_is_mapped_into_injector():void
 		{
 			var actual:Object = null;
-			context.extend( SignalCommandMapExtension );
+			context.install( SignalCommandMapExtension );
 			context.lifecycle.whenInitializing( function():void {
 				actual = context.injector.getInstance( ISignalCommandMap );
 			});
