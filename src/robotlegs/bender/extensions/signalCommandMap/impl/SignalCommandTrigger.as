@@ -134,7 +134,7 @@ public class SignalCommandTrigger implements ICommandTrigger
     protected  function createCommandInstance(valueClasses:Array, valueObjects:Array, commandClass:Class):Object
     {
         mapSignalValues(valueClasses, valueObjects)
-        return _injector.getInstance( commandClass );
+        return _injector.getOrCreateNewInstance( commandClass );
     }
 
     protected function hasSignalCommand(signal:ISignal, commandClass:Class):Boolean
@@ -155,7 +155,7 @@ public class SignalCommandTrigger implements ICommandTrigger
             return;
 
         _injector.map( _signalClass).asSingleton();
-        _signal = _injector.getInstance( _signalClass );
+        _signal = _injector.getOrCreateNewInstance( _signalClass );
 
         const signalCommandMap:Dictionary = _signalMap[_signal] ||= new Dictionary( false );
         const callback:Function = function():void
