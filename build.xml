@@ -40,6 +40,7 @@
 		<echo>[init] Creating Bin and Report directories</echo>
 		<mkdir dir = "${bin.loc}" />
 		<mkdir dir = "${report.loc}" />
+		<mkdir dir = "${dist.loc}" />
 		<echo>[init] Bin and Report directories created</echo>
 	</target>
 	<!-- Compile Release SWC -->
@@ -110,10 +111,8 @@
 
 	<!-- Package the Build -->
 	<target name = "package">
-
 		<!-- Assemble  -->
 		<echo>[package] Packaging Release</echo>
-		<mkdir dir = "${dist.loc}" />
 		<mkdir dir = "${dist.loc}/bin" />
 		<copy file = "${bin.loc}/${project.name.versioned}.swc"
 			  todir = "${dist.loc}/bin" />
