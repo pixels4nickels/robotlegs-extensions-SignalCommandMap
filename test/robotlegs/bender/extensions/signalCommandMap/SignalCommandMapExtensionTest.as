@@ -42,7 +42,7 @@ package robotlegs.bender.extensions.signalCommandMap
 		{
 			var actual:Object = null;
 			context.install( SignalCommandMapExtension );
-			context.lifecycle.whenInitializing( function():void {
+			context.whenInitializing( function():void {
 				actual = context.injector.getInstance( ISignalCommandMap );
 			});
 			context.initialize();
