@@ -5,10 +5,10 @@ package robotlegs.bender.extensions.signalCommandMap.support
 	 */
 	import org.osflash.signals.Signal;
 
-	public class PayloadCarryingSignal extends Signal{
-		public function PayloadCarryingSignal()
+	public class StrictPayloadCarryingSignal extends Signal{
+		public function StrictPayloadCarryingSignal()
 		{
-			super(Object);
+			super(Payload);
 		}
 	}
 }

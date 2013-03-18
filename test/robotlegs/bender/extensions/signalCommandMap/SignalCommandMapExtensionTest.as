@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  Copyright (c) 2012 the original author or authors. All Rights Reserved.
+//  Copyright (c) 2009-2013 the original author or authors. All Rights Reserved.
 //
 //  NOTICE: You are permitted to use, modify, and distribute this file
 //  in accordance with the terms of the license agreement accompanying it.
@@ -7,12 +7,11 @@
 
 package robotlegs.bender.extensions.signalCommandMap
 {
-    import flexunit.framework.Assert;
-    import org.flexunit.asserts.assertEquals;
+	import flexunit.framework.Assert;
 	import org.flexunit.assertThat;
+	import org.flexunit.asserts.assertEquals;
 	import org.hamcrest.object.instanceOf;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
-	import robotlegs.bender.extensions.commandCenter.CommandCenterExtension;
 	import robotlegs.bender.framework.impl.Context;
 
 	public class SignalCommandMapExtensionTest
@@ -32,7 +31,6 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function before():void
 		{
 			context = new Context();
-			context.install( CommandCenterExtension );
 		}
 
 		/*============================================================================*/
@@ -43,12 +41,12 @@ package robotlegs.bender.extensions.signalCommandMap
 		public function signalCommandMap_is_mapped_into_injector():void
 		{
 			var actual:Object = null;
-			context.install( SignalCommandMapExtension );
-			context.whenInitializing( function():void {
-				actual = context.injector.getInstance( ISignalCommandMap );
+			context.install(SignalCommandMapExtension);
+			context.whenInitializing(function():void {
+				actual = context.injector.getInstance(ISignalCommandMap);
 			});
 			context.initialize();
-			assertThat( actual, instanceOf( ISignalCommandMap ));
+			assertThat(actual, instanceOf(ISignalCommandMap));
 		}
 
 		[Test]
@@ -67,26 +65,84 @@ package robotlegs.bender.extensions.signalCommandMap
 		}
 	}
 }
+
 import org.osflash.signals.Signal;
 
 class Data
 {
+
+	/*============================================================================*/
+	/* Public Properties                                                          */
+	/*============================================================================*/
+
 	public var value:int;
-	public function Data(value:int) { this.value = value; }
+
+	/*============================================================================*/
+	/* Constructor                                                                */
+	/*============================================================================*/
+
+	public function Data(value:int)  { this.value = value; }
 }
 
-class RelaySignal extends Signal { public function RelaySignal() { super(Data); } }
+class RelaySignal extends Signal
+{
+
+	/*============================================================================*/
+	/* Constructor                                                                */
+	/*============================================================================*/
+
+	public function RelaySignal()  { super(Data); }
+}
+
 class RelayCommand
 {
-	[Inject] public var data:Data;
-	[Inject] public var signal:TargetSignal;
-	public function execute():void { signal.dispatch(data); }
+
+	/*============================================================================*/
+	/* Public Properties                                                          */
+	/*============================================================================*/
+
+	[Inject]
+	public var data:Data;
+
+	[Inject]
+	public var signal:TargetSignal;
+
+	/*============================================================================*/
+	/* Public Functions                                                           */
+	/*============================================================================*/
+
+	public function execute():void  { signal.dispatch(data); }
 }
 
-class TargetSignal extends Signal { public function TargetSignal() { super(Data); } }
+class TargetSignal extends Signal
+{
+
+	/*============================================================================*/
+	/* Constructor                                                                */
+	/*============================================================================*/
+
+	public function TargetSignal()  { super(Data); }
+}
+
 class TargetCommand
 {
+
+	/*============================================================================*/
+	/* Public Static Properties                                                   */
+	/*============================================================================*/
+
 	public static var TARGET_VALUE:int;
-	[Inject] public var data:Data;
-	public function execute():void { TARGET_VALUE = data.value; }
+
+	/*============================================================================*/
+	/* Public Properties                                                          */
+	/*============================================================================*/
+
+	[Inject]
+	public var data:Data;
+
+	/*============================================================================*/
+	/* Public Functions                                                           */
+	/*============================================================================*/
+
+	public function execute():void  { TARGET_VALUE = data.value; }
 }

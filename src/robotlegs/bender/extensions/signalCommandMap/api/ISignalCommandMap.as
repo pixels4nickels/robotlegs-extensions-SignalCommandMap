@@ -10,11 +10,26 @@ package robotlegs.bender.extensions.signalCommandMap.api
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
 
+
+
+	/**
+	 * The Signal Command Map allows you to bind Signals to Commands
+	 */
 	public interface ISignalCommandMap
 	{
-		function map( signalClass:Class, once:Boolean=false ):ICommandMapper;
 
+		/**
+		 * Creates a mapping for a Signal based trigger
+		 * @param signalClass The concrete Signal class
+		 * @return Command mapper
+		 */
+		function map( signalClass:Class ):ICommandMapper;
+
+		/**
+		 * Unmaps a Signal based trigger from a command
+		 * @param signalClass The concrete Signal class
+		 * @return Command unmapper
+		 */
 		function unmap( signalClass:Class ):ICommandUnmapper;
-
 	}
 }

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  Copyright (c) 2012 the original author or authors. All Rights Reserved.
+//  Copyright (c) 2009-2013 the original author or authors. All Rights Reserved.
 //
 //  NOTICE: You are permitted to use, modify, and distribute this file
 //  in accordance with the terms of the license agreement accompanying it.
@@ -7,171 +7,100 @@
 
 package robotlegs.bender.extensions.signalCommandMap.impl
 {
-import flash.utils.Dictionary;
-import flash.utils.describeType;
+	import org.osflash.signals.ISignal;
+	import org.swiftsuspenders.Injector;
+	import robotlegs.bender.extensions.commandCenter.api.ICommandExecutor;
+	import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
+	import robotlegs.bender.extensions.commandCenter.impl.CommandExecutor;
+	import robotlegs.bender.extensions.commandCenter.impl.CommandMapper;
+	import robotlegs.bender.extensions.commandCenter.impl.CommandMappingList;
+	import robotlegs.bender.extensions.commandCenter.impl.CommandPayload;
+	import robotlegs.bender.framework.api.ILogger;
 
-import org.osflash.signals.ISignal;
-import org.osflash.signals.Signal;
-import org.swiftsuspenders.Injector;
+	/**
+	 * @private
+	 */
+	public class SignalCommandTrigger implements ICommandTrigger
+	{
 
-import robotlegs.bender.extensions.commandCenter.api.ICommandMapping;
-import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
-import robotlegs.bender.framework.impl.applyHooks;
-import robotlegs.bender.framework.impl.guardsApprove;
+		/*============================================================================*/
+		/* Private Properties                                                         */
+		/*============================================================================*/
 
-public class SignalCommandTrigger implements ICommandTrigger
-{
+		private var _signalClass:Class;
 
-    /*============================================================================*/
-    /* Private Properties                                                         */
-    /*============================================================================*/
+		private var _signal:ISignal;
 
-    private const _mappings:Vector.<ICommandMapping> = new Vector.<ICommandMapping>;
+		private var _injector:Injector;
 
-    private var _signal:ISignal;
+		private var _mappings:CommandMappingList;
 
-    private var _signalClass:Class;
+		private var _executor:ICommandExecutor;
 
-    private var _once:Boolean;
+		/*============================================================================*/
+		/* Constructor                                                                */
+		/*============================================================================*/
 
-    /*============================================================================*/
-    /* Protected Properties                                                         */
-    /*============================================================================*/
+		/**
+		 * @private
+		 */
+		public function SignalCommandTrigger(
+			injector:Injector,
+			signalClass:Class,
+			logger:ILogger = null)
+		{
+			_injector = injector;
 
-    protected var _injector:Injector;
+			_signalClass = signalClass;
+			_mappings = new CommandMappingList(this, logger);
+			_executor = new CommandExecutor(injector, _mappings.removeMapping);
+		}
 
-    protected var _signalMap:Dictionary;
+		/*============================================================================*/
+		/* Public Functions                                                           */
+		/*============================================================================*/
 
-    protected var _verifiedCommandClasses:Dictionary;
+		/**
+		 * @private
+		 */
+		public function createMapper():CommandMapper
+		{
+			return new CommandMapper(_mappings);
+		}
 
-    /*============================================================================*/
-    /* Constructor                                                                */
-    /*============================================================================*/
+		/**
+		 * @inheritDoc
+		 */
+		public function activate():void
+		{
+			if (!_injector.hasMapping(_signalClass))
+				_injector.map(_signalClass).asSingleton();
+			_signal = _injector.getInstance(_signalClass);
+			_signal.add(routePayloadToCommands);
+		}
 
-    public function SignalCommandTrigger(
-            injector:Injector,
-            signalClass:Class,
-            once:Boolean = false)
-    {
-        _injector = injector;
-        _signalClass = signalClass;
-        _once = once;
+		/**
+		 * @inheritDoc
+		 */
+		public function deactivate():void
+		{
+			if (_signal)
+				_signal.remove(routePayloadToCommands);
+		}
 
-        _signalMap = new Dictionary( false );
-        _verifiedCommandClasses = new Dictionary( false );
-    }
+		public function toString():String
+		{
+			return String(_signalClass);
+		}
 
-    /*============================================================================*/
-    /* Public Functions                                                           */
-    /*============================================================================*/
+		/*============================================================================*/
+		/* Private Functions                                                          */
+		/*============================================================================*/
 
-    public function addMapping(mapping:ICommandMapping):void
-    {
-        verifyCommandClass(mapping);
-        _mappings.push(mapping);
-        if (_mappings.length == 1)
-            addSignal(mapping.commandClass);
-    }
-
-    public function removeMapping(mapping:ICommandMapping):void
-    {
-        const index:int = _mappings.indexOf(mapping);
-        if (index != -1)
-        {
-            _mappings.splice(index, 1);
-            if (_mappings.length == 0)
-                removeSignal(mapping.commandClass);
-        }
-    }
-
-    /*============================================================================*/
-    /* Protected Functions                                                          */
-    /*============================================================================*/
-
-    protected function verifyCommandClass(mapping:ICommandMapping):void
-    {
-        if ( _verifiedCommandClasses[mapping.commandClass] ) return;
-        if (describeType(mapping.commandClass).factory.method.(@name == "execute").length() == 0)
-            throw new Error("Command Class must expose an execute method");
-        _verifiedCommandClasses[mapping.commandClass] = true;
-    }
-
-    protected function routeSignalToCommand(signal:ISignal, valueObjects:Array, commandClass:Class, oneshot:Boolean):void
-    {
-        const mappings:Vector.<ICommandMapping> = _mappings.concat();
-
-        for each (var mapping:ICommandMapping in mappings)
-        {
-	        mapSignalValues(signal.valueClasses, valueObjects);
-	        const isApproved:Boolean = guardsApprove(mapping.guards, _injector);
-			if (isApproved)
-            {
-                _once && removeMapping(mapping);
-                _injector.map(mapping.commandClass).asSingleton();
-	            const command:Object = _injector.getInstance( mapping.commandClass);
-	            applyHooks(mapping.hooks, _injector);
-                _injector.unmap(mapping.commandClass);
-            }
-	        unmapSignalValues( signal.valueClasses, valueObjects );
-	        if (isApproved)
-	        {
-		       command.execute();
-            }
-        }
-
-        if ( _once )
-            removeSignal(commandClass );
-    }
-
-    protected function mapSignalValues(valueClasses:Array, valueObjects:Array):void {
-        for (var i:uint = 0; i < valueClasses.length; i++) {
-            _injector.map(valueClasses[i]).toValue(valueObjects[i]);
-        }
-    }
-
-    protected function unmapSignalValues(valueClasses:Array, valueObjects:Array):void {
-        for (var i:uint = 0; i < valueClasses.length; i++) {
-            _injector.unmap(valueClasses[i]);
-        }
-    }
-
-    protected function hasSignalCommand(signal:ISignal, commandClass:Class):Boolean
-    {
-        var callbacksByCommandClass:Dictionary = _signalMap[signal];
-        if ( callbacksByCommandClass == null ) return false;
-        var callback:Function = callbacksByCommandClass[commandClass];
-        return callback != null;
-    }
-
-    /*============================================================================*/
-    /* Private Functions                                                          */
-    /*============================================================================*/
-
-    private function addSignal(commandClass:Class):void
-    {
-        if ( hasSignalCommand( _signal, commandClass ) )
-            return;
-
-        _injector.map( _signalClass).asSingleton();
-        _signal = _injector.getOrCreateNewInstance( _signalClass );
-
-        const signalCommandMap:Dictionary = _signalMap[_signal] ||= new Dictionary( false );
-        const callback:Function = function():void
-        {
-            routeSignalToCommand( _signal, arguments, commandClass, _once );
-        };
-        signalCommandMap[commandClass] = callback;
-        _signal.add( callback );
-    }
-
-    private function removeSignal(commandClass:Class):void
-    {
-        var callbacksByCommandClass:Dictionary = _signalMap[_signal];
-        if ( callbacksByCommandClass == null ) return;
-        var callback:Function = callbacksByCommandClass[commandClass];
-        if ( callback == null ) return;
-        _signal.remove( callback );
-        delete callbacksByCommandClass[commandClass];
-    }
-}
+		private function routePayloadToCommands(... valueObjects):void
+		{
+			const payload:CommandPayload = new CommandPayload(valueObjects, _signal.valueClasses);
+			_executor.executeCommands(_mappings.getList(), payload);
+		}
+	}
 }
