@@ -13,7 +13,6 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.hamcrest.object.instanceOf;
 	import org.hamcrest.object.notNullValue;
 	import org.swiftsuspenders.Injector;
-
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;

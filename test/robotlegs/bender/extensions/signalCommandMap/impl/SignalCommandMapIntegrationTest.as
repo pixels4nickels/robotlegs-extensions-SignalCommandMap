@@ -14,7 +14,6 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.hamcrest.object.strictlyEqualTo;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
-
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.extensions.signalCommandMap.support.NullCommand;
 	import robotlegs.bender.extensions.signalCommandMap.support.Payload;
@@ -313,7 +312,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		}
 
 		[Test]
-		public function test_loose_payload_isnt_passed_to_execute_method() : void{
+		public function test_loose_payload_isnt_passed_to_execute_method():void
+		{
 			var passed:Object;
 			injector.map(Function, 'executeCallback').toValue(function(command:ExecuteMethodWithParametersCommand):void
 			{
@@ -451,7 +451,6 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 import org.osflash.signals.Signal;
 import org.swiftsuspenders.Injector;
-
 import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 import robotlegs.bender.extensions.signalCommandMap.support.NullCommand;
 import robotlegs.bender.extensions.signalCommandMap.support.Payload;
@@ -467,12 +466,13 @@ internal class ExecuteMethodWithParametersCommand
 	[Inject(name="executeCallback")]
 	public var callback:Function;
 
-	public var payload : Payload;
+	public var payload:Payload;
+
 	/*============================================================================*/
 	/* Public Functions                                                           */
 	/*============================================================================*/
 
-	public function execute( payload : Payload=null):void
+	public function execute(payload:Payload = null):void
 	{
 		this.payload = payload;
 		callback(this);

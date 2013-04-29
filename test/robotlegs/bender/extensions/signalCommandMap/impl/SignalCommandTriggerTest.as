@@ -10,10 +10,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
-
 	import mockolate.received;
 	import mockolate.runner.MockolateRule;
-
 	import org.hamcrest.assertThat;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.object.equalTo;
@@ -21,7 +19,6 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
-
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
 
 	public class SignalCommandTriggerTest
@@ -43,7 +40,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 		private var subject:SignalCommandTrigger;
 
-		private var injector : Injector;
+		private var injector:Injector;
 
 		/*============================================================================*/
 		/* Test Setup and Teardown                                                    */
@@ -70,7 +67,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		}
 
 		[Test]
-		public function test_deactivate_removes_listener() : void{
+		public function test_deactivate_removes_listener():void
+		{
 			subject.activate();
 
 			subject.deactivate();
@@ -79,7 +77,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		}
 
 		[Test]
-		public function test_doesnt_throw_error_when_deactivating_without_signal() : void{
+		public function test_doesnt_throw_error_when_deactivating_without_signal():void
+		{
 			subject.deactivate();
 			// note: no assertion. we just want to know if an error is thrown
 		}
