@@ -7,16 +7,18 @@
 
 package robotlegs.bender.extensions.signalCommandMap.support
 {
+	import org.osflash.signals.Signal;
 
-	public class NullCommand
+	public class SupportSignal extends Signal
 	{
 
 		/*============================================================================*/
-		/* Public Functions                                                           */
+		/* Constructor                                                                */
 		/*============================================================================*/
 
-		public function execute():void
+		public function SupportSignal(... valueClasses)
 		{
+			super(valueClasses);
 		}
 	}
 }

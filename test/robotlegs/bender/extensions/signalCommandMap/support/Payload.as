@@ -8,14 +8,14 @@
 package robotlegs.bender.extensions.signalCommandMap.support
 {
 
-	public class NullCommand
+	public class Payload
 	{
 
 		/*============================================================================*/
-		/* Public Functions                                                           */
+		/* Constructor                                                                */
 		/*============================================================================*/
 
-		public function execute():void
+		public function Payload()
 		{
 		}
 	}
