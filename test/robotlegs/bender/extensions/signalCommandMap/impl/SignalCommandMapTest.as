@@ -13,6 +13,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.hamcrest.object.instanceOf;
 	import org.hamcrest.object.notNullValue;
 	import org.swiftsuspenders.Injector;
+	import robotlegs.bender.extensions.commandCenter.api.ICommandMapping;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
@@ -31,7 +32,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 		private var injector:Injector;
 
-		private var signalCommandMap:ISignalCommandMap;
+		private var subject:ISignalCommandMap;
 
 		/*============================================================================*/
 		/* Test Setup and Teardown                                                    */
@@ -42,7 +43,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		{
 			const context:IContext = new Context();
 			injector = context.injector;
-			signalCommandMap = new SignalCommandMap(context);
+			subject = new SignalCommandMap(context);
 		}
 
 		/*============================================================================*/
@@ -52,27 +53,38 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		[Test]
 		public function map_creates_mapper():void
 		{
-			assertThat(signalCommandMap.map(TestSignal), notNullValue());
+			assertThat(subject.map(TestSignal), notNullValue());
 		}
 
 		[Test]
 		public function test_map_returns_new_mapper_when_identical_signal():void
 		{
-			var mapper:ICommandMapper = signalCommandMap.map(NullSignal);
-			assertThat(signalCommandMap.map(NullSignal), not(equalTo(mapper)));
+			var mapper:ICommandMapper = subject.map(NullSignal);
+			assertThat(subject.map(NullSignal), not(equalTo(mapper)));
 		}
 
 		[Test]
 		public function test_unmap_returns_unmapper():void
 		{
-			var mapper:ICommandUnmapper = signalCommandMap.unmap(NullSignal);
+			var mapper:ICommandUnmapper = subject.unmap(NullSignal);
 			assertThat(mapper, instanceOf(ICommandUnmapper));
 		}
 
 		[Test]
 		public function test_robust_unmapping_non_existent_mappings():void
 		{
-			signalCommandMap.unmap(NullSignal).fromCommand(NullCommand);
+			subject.unmap(NullSignal).fromCommand(NullCommand);
+		}
+
+		[Test]
+		public function mapping_processor_is_called():void
+		{
+			var callCount:int = 0;
+			subject.addMappingProcessor(function(mapping:ICommandMapping):void {
+				callCount++;
+			});
+			subject.map(NullSignal).toCommand(NullCommand);
+			assertThat(callCount, equalTo(1));
 		}
 	}
 }
