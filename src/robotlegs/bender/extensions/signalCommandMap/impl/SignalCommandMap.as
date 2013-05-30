@@ -26,6 +26,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
+		private const _mappingProcessors:Array = [];
+
 		private var _injector:Injector;
 
 		private var _triggerMap:CommandTriggerMap;
@@ -66,13 +68,20 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 			return getTrigger(signalClass).createMapper();
 		}
 
+		public function addMappingProcessor(handler:Function):ISignalCommandMap
+		{
+			if (_mappingProcessors.indexOf(handler) == -1)
+				_mappingProcessors.push(handler);
+			return this;
+		}
+
 		/*============================================================================*/
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
 		private function createTrigger(signalClass:Class):ICommandTrigger
 		{
-			return new SignalCommandTrigger(_injector, signalClass);
+			return new SignalCommandTrigger(_injector, signalClass, _mappingProcessors);
 		}
 
 		private function getTrigger(signalClass:Class):SignalCommandTrigger
