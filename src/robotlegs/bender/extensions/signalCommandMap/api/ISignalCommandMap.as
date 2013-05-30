@@ -31,5 +31,12 @@ package robotlegs.bender.extensions.signalCommandMap.api
 		 * @return Command unmapper
 		 */
 		function unmap( signalClass:Class ):ICommandUnmapper;
+
+		/**
+		 * Adds a handler to process mappings
+		 * @param handler Function that accepts a mapping
+		 * @return Self
+		 */
+		function addMappingProcessor(handler:Function):ISignalCommandMap;
 	}
 }
