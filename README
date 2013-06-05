@@ -1,3 +1,7 @@
+I have forked this library to the official robotlegs organisation page.
+Please post any about any known issues/bugs there.
+https://github.com/robotlegs/robotlegs-extensions-SignalCommandMap
+
 # Signal command map for Robotlegs2
 
 This is an example of using the Signal Command Map. This example uses the new Robotlegs2 framework (swc included for ease of use)
