@@ -103,6 +103,7 @@ public class SignalCommandTrigger implements ICommandTrigger
         for each (var mapping:ICommandMapping in mappings)
         {
 	        mapSignalValues(signal.valueClasses, valueObjects);
+            mapSignal(signal);
             if (guardsApprove(mapping.guards, _injector))
             {
                 _once && removeMapping(mapping);
@@ -113,10 +114,22 @@ public class SignalCommandTrigger implements ICommandTrigger
                 command.execute();
             }
 	        unmapSignalValues(signal.valueClasses, valueObjects);
+            unmapSignal();
         }
 
         if ( _once )
             removeSignal(commandClass );
+    }
+
+    private function mapSignal(signal:ISignal):void {
+        unmapSignal();
+        _injector.map(ISignal, 'trigger').toValue(signal);
+    }
+
+    private function unmapSignal():void {
+        const hasMapping: Boolean = _injector.hasDirectMapping(ISignal, 'trigger');
+        if(hasMapping)
+            _injector.unmap(ISignal, 'trigger');
     }
 
     protected function mapSignalValues(valueClasses:Array, valueObjects:Array):void {
