@@ -7,7 +7,7 @@
 
 package robotlegs.bender.extensions.signalCommandMap.impl
 {
-	import org.swiftsuspenders.Injector;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
@@ -28,7 +28,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 		private const _mappingProcessors:Array = [];
 
-		private var _injector:Injector;
+		private var _injector:IInjector;
 
 		private var _triggerMap:CommandTriggerMap;
 
