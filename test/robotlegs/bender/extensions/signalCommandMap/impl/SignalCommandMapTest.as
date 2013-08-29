@@ -13,6 +13,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.hamcrest.object.instanceOf;
 	import org.hamcrest.object.notNullValue;
 	import org.swiftsuspenders.Injector;
+
 	import robotlegs.bender.extensions.commandCenter.api.ICommandMapping;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
@@ -21,6 +22,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import robotlegs.bender.extensions.signalCommandMap.support.NullSignal;
 	import robotlegs.bender.extensions.signalCommandMap.support.TestSignal;
 	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.framework.impl.Context;
 
 	public class SignalCommandMapTest
@@ -30,7 +32,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private var injector:Injector;
+		private var injector:IInjector;
 
 		private var subject:ISignalCommandMap;
 
@@ -80,7 +82,8 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function mapping_processor_is_called():void
 		{
 			var callCount:int = 0;
-			subject.addMappingProcessor(function(mapping:ICommandMapping):void {
+			subject.addMappingProcessor(function (mapping:ICommandMapping):void
+			{
 				callCount++;
 			});
 			subject.map(NullSignal).toCommand(NullCommand);

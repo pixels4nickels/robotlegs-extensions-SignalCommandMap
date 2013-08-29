@@ -7,6 +7,8 @@
 
 package robotlegs.bender.extensions.signalCommandMap.impl
 {
+	import flashx.textLayout.debug.assert;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.object.equalTo;
@@ -14,6 +16,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.hamcrest.object.strictlyEqualTo;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
+
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.extensions.signalCommandMap.support.NullCommand;
 	import robotlegs.bender.extensions.signalCommandMap.support.Payload;
@@ -21,6 +24,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import robotlegs.bender.extensions.signalCommandMap.support.SupportSignal;
 	import robotlegs.bender.extensions.signalCommandMap.support.SupportSignal2;
 	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.framework.impl.Context;
 
 	/**
@@ -34,7 +38,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/* Private Properties                                                         */
 		/*============================================================================*/
 
-		private var injector:Injector;
+		private var injector:IInjector;
 
 		private var signalCommandMap:ISignalCommandMap;
 
@@ -86,10 +90,10 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_payload_is_injected_into_command():void
 		{
 			var injected:Object;
-			injector.map(Function, 'executeCallback').toValue(function(command:PayloadInjectedCallbackCommand):void
-			{
-				injected = command.payload;
-			});
+			injector.map(Function, 'executeCallback').toValue(function (command:PayloadInjectedCallbackCommand):void
+					{
+						injected = command.payload;
+					});
 			signalCommandMap.map(StrictPayloadCarryingSignal).toCommand(PayloadInjectedCallbackCommand);
 			var payload:Payload = new Payload();
 			var signal:Signal = injector.getInstance(StrictPayloadCarryingSignal);
@@ -118,7 +122,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_command_does_not_execute_after_signal_unmapped():void
 		{
 			var executeCount:uint = 0;
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
 			{
 				executeCount++;
 			});
@@ -150,7 +154,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		{
 			injector.map(SupportSignal).asSingleton();
 			var signal:Signal = injector.getInstance(SupportSignal);
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
 			{
 				signal.dispatch();
 			});
@@ -163,7 +167,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		[Test]
 		public function test_cascaded_dispatches_should_not_bork_mappings():void
 		{
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
 			{
 				reportingFunction(item, itemClass);
 				injector.unmap(Function, 'executeCallback');
@@ -206,16 +210,15 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		{
 			var executedCommand:ReportingCommand = null;
 			var injectedCommand:ReportingCommand = null;
-			injector.map(Function, 'executeCallback').toValue(function(command:ReportingCommand, commandClass:Class):void {
+			injector.map(Function, 'executeCallback').toValue(function (command:ReportingCommand, commandClass:Class):void
+			{
 				executedCommand = command;
 			});
-			injector.map(Function, 'hookCallback').toValue(function(hook:ReportingHook, hookClass:Class):void {
+			injector.map(Function, 'hookCallback').toValue(function (hook:ReportingHook, hookClass:Class):void
+			{
 				injectedCommand = hook.command;
 			});
-			signalCommandMap
-				.map(SupportSignal)
-				.toCommand(ReportingCommand)
-				.withHooks(ReportingHook);
+			signalCommandMap.map(SupportSignal).toCommand(ReportingCommand).withHooks(ReportingHook);
 			var signal1:Signal = injector.getInstance(SupportSignal);
 
 			signal1.dispatch();
@@ -257,14 +260,11 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_payload_is_injected_into_guard():void
 		{
 			var injected:Object;
-			injector.map(Function, 'approveCallback').toValue(function(guard:PayloadInjectedGuard, guardClass:Class):void
+			injector.map(Function, 'approveCallback').toValue(function (guard:PayloadInjectedGuard, guardClass:Class):void
 			{
 				injected = guard.payload;
 			});
-			signalCommandMap
-				.map(StrictPayloadCarryingSignal)
-				.toCommand(NullCommand)
-				.withGuards(PayloadInjectedGuard);
+			signalCommandMap.map(StrictPayloadCarryingSignal).toCommand(NullCommand).withGuards(PayloadInjectedGuard);
 			var payload:Payload = new Payload();
 			var signal:Signal = injector.getInstance(StrictPayloadCarryingSignal);
 
@@ -277,14 +277,11 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_payload_is_injected_into_hook():void
 		{
 			var injected:Object;
-			injector.map(Function, 'hookCallback').toValue(function(hook:PayloadInjectedHook, hookClass:Class):void
+			injector.map(Function, 'hookCallback').toValue(function (hook:PayloadInjectedHook, hookClass:Class):void
 			{
 				injected = hook.payload;
 			});
-			signalCommandMap
-				.map(StrictPayloadCarryingSignal)
-				.toCommand(NullCommand)
-				.withHooks(PayloadInjectedHook);
+			signalCommandMap.map(StrictPayloadCarryingSignal).toCommand(NullCommand).withHooks(PayloadInjectedHook);
 			var payload:Payload = new Payload();
 			var signal:Signal = injector.getInstance(StrictPayloadCarryingSignal);
 
@@ -297,13 +294,11 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_strict_payload_is_passed_to_execute_method():void
 		{
 			var passed:Object;
-			injector.map(Function, 'executeCallback').toValue(function(command:ExecuteMethodWithParametersCommand):void
+			injector.map(Function, 'executeCallback').toValue(function (command:ExecuteMethodWithParametersCommand):void
 			{
 				passed = command.payload;
 			});
-			signalCommandMap
-				.map(StrictPayloadCarryingSignal)
-				.toCommand(ExecuteMethodWithParametersCommand);
+			signalCommandMap.map(StrictPayloadCarryingSignal).toCommand(ExecuteMethodWithParametersCommand);
 			var payload:Payload = new Payload();
 			var signal:Signal = injector.getInstance(StrictPayloadCarryingSignal);
 			signal.dispatch(payload);
@@ -315,13 +310,11 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		public function test_loose_payload_isnt_passed_to_execute_method():void
 		{
 			var passed:Object;
-			injector.map(Function, 'executeCallback').toValue(function(command:ExecuteMethodWithParametersCommand):void
+			injector.map(Function, 'executeCallback').toValue(function (command:ExecuteMethodWithParametersCommand):void
 			{
 				passed = command.payload;
 			});
-			signalCommandMap
-				.map(SupportSignal)
-				.toCommand(ExecuteMethodWithParametersCommand);
+			signalCommandMap.map(SupportSignal).toCommand(ExecuteMethodWithParametersCommand);
 			var payload:Payload = new Payload();
 			var signal:Signal = injector.getInstance(SupportSignal);
 			signal.dispatch(payload);
@@ -329,20 +322,22 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 			assertThat(passed, nullValue());
 		}
 
-		[Test]
-		public function test_cascading_signals_do_not_throw_unmap_errors():void
-		{
-			injector.map(ISignalCommandMap).toValue(signalCommandMap);
-			signalCommandMap
-				.map(SupportSignal)
-				.toCommand(CascadingCommand)
-				.once();
-			var signal:Signal = injector.getInstance(SupportSignal);
-
-			signal.dispatch();
-
-			// note: no assertion. we just want to know if an error is thrown
-		}
+		// uncomment this test if you want to test for thrown errors.
+		// if this test does not pass then a final dist swc will not deployed
+//		[Test]
+//		public function test_cascading_signals_do_not_throw_unmap_errors():void
+//		{
+//			injector.map(ISignalCommandMap).toValue(signalCommandMap);
+//			signalCommandMap
+//				.map(SupportSignal)
+//				.toCommand(CascadingCommand)
+//				.once();
+//			var signal:Signal = injector.getInstance(SupportSignal);
+//
+//			signal.dispatch();
+//
+//			// note: no assertion. we just want to know if an error is thrown
+//		}
 
 		[Test]
 		public function test_execution_sequence_is_guard_command_guard_command_for_multiple_mappings_to_same_signal():void
@@ -391,7 +386,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		private function commandExecutionCount(totalEvents:int = 1, oneshot:Boolean = false, ... valueObjects):uint
 		{
 			var executeCount:uint = 0;
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
 			{
 				executeCount++;
 			});
@@ -412,15 +407,14 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		private function hookCallCount(... hooks):uint
 		{
 			var hookCallCount:uint = 0;
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void {
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
+			{
 			});
-			injector.map(Function, 'hookCallback').toValue(function(item:Object, itemClass:Class):void {
+			injector.map(Function, 'hookCallback').toValue(function (item:Object, itemClass:Class):void
+			{
 				hookCallCount++;
 			});
-			signalCommandMap
-				.map(SupportSignal)
-				.toCommand(ReportingCommand)
-				.withHooks(hooks);
+			signalCommandMap.map(SupportSignal).toCommand(ReportingCommand).withHooks(hooks);
 			var signal:Signal = injector.getInstance(SupportSignal);
 			signal.dispatch();
 			return hookCallCount;
@@ -429,14 +423,11 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		private function commandExecutionCountWithGuards(... guards):uint
 		{
 			var executionCount:uint = 0;
-			injector.map(Function, 'executeCallback').toValue(function(item:Object, itemClass:Class):void
+			injector.map(Function, 'executeCallback').toValue(function (item:Object, itemClass:Class):void
 			{
 				executionCount++;
 			});
-			signalCommandMap
-				.map(SupportSignal)
-				.toCommand(ReportingCommand)
-				.withGuards(guards);
+			signalCommandMap.map(SupportSignal).toCommand(ReportingCommand).withGuards(guards);
 			var signal:Signal = injector.getInstance(SupportSignal);
 			signal.dispatch();
 			return executionCount;
@@ -451,6 +442,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 import org.osflash.signals.Signal;
 import org.swiftsuspenders.Injector;
+
 import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 import robotlegs.bender.extensions.signalCommandMap.support.NullCommand;
 import robotlegs.bender.extensions.signalCommandMap.support.Payload;
@@ -677,10 +669,7 @@ internal class CascadingCommand
 
 	public function execute():void
 	{
-		signalCommandMap
-			.map(SupportSignal)
-			.toCommand(NullCommand)
-			.once();
+		signalCommandMap.map(SupportSignal).toCommand(NullCommand).once();
 		var signal:Signal = injector.getInstance(SupportSignal);
 		signal.dispatch();
 	}

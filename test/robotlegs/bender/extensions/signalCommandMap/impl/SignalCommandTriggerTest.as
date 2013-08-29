@@ -10,8 +10,10 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+
 	import mockolate.received;
 	import mockolate.runner.MockolateRule;
+
 	import org.hamcrest.assertThat;
 	import org.hamcrest.collection.array;
 	import org.hamcrest.object.equalTo;
@@ -19,7 +21,10 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	import org.swiftsuspenders.Injector;
+
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
+	import robotlegs.bender.framework.api.IInjector;
+	import robotlegs.bender.framework.impl.RobotlegsInjector;
 
 	public class SignalCommandTriggerTest
 	{
@@ -40,7 +45,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 
 		private var subject:SignalCommandTrigger;
 
-		private var injector:Injector;
+		private var injector:IInjector;
 
 		/*============================================================================*/
 		/* Test Setup and Teardown                                                    */
@@ -49,7 +54,7 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		[Before]
 		public function before():void
 		{
-			injector = new Injector();
+			injector = new RobotlegsInjector();
 			injector.map(ISignal).toValue(signal);
 			subject = new SignalCommandTrigger(injector, ISignal);
 		}
