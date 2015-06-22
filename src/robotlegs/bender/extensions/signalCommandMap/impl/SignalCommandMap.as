@@ -7,13 +7,13 @@
 
 package robotlegs.bender.extensions.signalCommandMap.impl
 {
-	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.extensions.commandCenter.api.ICommandTrigger;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandMapper;
 	import robotlegs.bender.extensions.commandCenter.dsl.ICommandUnmapper;
 	import robotlegs.bender.extensions.commandCenter.impl.CommandTriggerMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.api.IInjector;
 	import robotlegs.bender.framework.api.ILogger;
 
 	/**
@@ -55,9 +55,9 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/**
 		 * @inheritDoc
 		 */
-		public function map(signalClass:Class):ICommandMapper
+		public function map(signalClass:Class,signalGroup:String=""):ICommandMapper
 		{
-			return getTrigger(signalClass).createMapper();
+			return getTrigger(signalClass,signalGroup).createMapper();
 		}
 
 		/**
@@ -79,19 +79,19 @@ package robotlegs.bender.extensions.signalCommandMap.impl
 		/* Private Functions                                                          */
 		/*============================================================================*/
 
-		private function createTrigger(signalClass:Class):ICommandTrigger
+		private function createTrigger(signalClass:Class,signalGroup:String=""):ICommandTrigger
 		{
-			return new SignalCommandTrigger(_injector, signalClass, _mappingProcessors);
+			return new SignalCommandTrigger(_injector, signalClass, _mappingProcessors,_logger,signalGroup);
 		}
 
-		private function getTrigger(signalClass:Class):SignalCommandTrigger
+		private function getTrigger(signalClass:Class,signalGroup:String=""):SignalCommandTrigger
 		{
-			return _triggerMap.getTrigger(signalClass) as SignalCommandTrigger;
+			return _triggerMap.getTrigger(signalClass,signalGroup) as SignalCommandTrigger;
 		}
 
-		private function getKey(signalClass:Class):Object
+		private function getKey(signalClass:Class,signalGroup:String=""):Object
 		{
-			return signalClass;
+			return [signalClass,signalGroup];
 		}
 	}
 }
