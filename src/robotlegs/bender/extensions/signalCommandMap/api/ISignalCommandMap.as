@@ -23,7 +23,7 @@ package robotlegs.bender.extensions.signalCommandMap.api
 		 * @param signalClass The concrete Signal class
 		 * @return Command mapper
 		 */
-		function map( signalClass:Class ):ICommandMapper;
+		function map( signalClass:Class,signalGroup:String="" ):ICommandMapper;
 
 		/**
 		 * Unmaps a Signal based trigger from a command
